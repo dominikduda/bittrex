@@ -1,7 +1,7 @@
 {
   "OrderUuid": "1af0399d-e845-4xxx-9d85-aa332d831e95",
   "Exchange": "BTC-HPY",
-  "TimeStamp": "2014-06-21T04:08:08.75",
+  "Opened": "2014-06-21T04:08:08.75",
   "OrderType": "LIMIT_SELL",
   "Limit": 1.6E-7,
   "Quantity": 371810.26006413,
