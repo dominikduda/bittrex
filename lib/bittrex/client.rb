@@ -21,11 +21,7 @@ module Bittrex
                  else
                    RestClient.get full_url(path, params), apisign: signature(full_url(path, params))
                  end
-      if path.include?('cancel')
-        JSON.parse(response.body)
-      else
-        JSON.parse(response.body)['result']
-      end
+      JSON.parse(response.body)
     end
 
     private

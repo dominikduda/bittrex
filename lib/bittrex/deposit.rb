@@ -13,7 +13,7 @@ module Bittrex
     end
 
     def self.all
-      client.get('account/getdeposithistory').map{|data| new(data) }
+      client.get('account/getdeposithistory')['result'].map { |data| new(data) }
     end
 
     private

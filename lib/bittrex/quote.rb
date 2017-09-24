@@ -13,7 +13,7 @@ module Bittrex
     # Example:
     # Bittrex::Quote.current('BTC-HPY')
     def self.current(market)
-      new(market, client.get('public/getticker', market: market))
+      new(market, client.get('public/getticker', market: market)['result'])
     end
 
     private

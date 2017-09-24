@@ -15,7 +15,7 @@ module Bittrex
     end
 
     def self.all
-      client.get('public/getcurrencies').map{|data| new(data) }
+      client.get('public/getcurrencies')['result'].map{ |data| new(data) }
     end
 
     private

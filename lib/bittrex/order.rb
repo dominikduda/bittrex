@@ -38,11 +38,11 @@ module Bittrex
     end
 
     def self.open
-      client.get('market/getopenorders').map{|data| new(data) }
+      client.get('market/getopenorders')['result'].map { |data| new(data) }
     end
 
     def self.history
-      client.get('account/getorderhistory').map{|data| new(data) }
+      client.get('account/getorderhistory')['result'].map { |data| new(data) }
     end
 
     private
@@ -52,7 +52,7 @@ module Bittrex
         market: market,
         type: type,
         depth: depth
-      })
+      })['result']
     end
 
     def self.client
