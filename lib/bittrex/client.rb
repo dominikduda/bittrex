@@ -1,6 +1,6 @@
-require 'faraday'
 require 'base64'
 require 'json'
+require 'rest-client'
 
 module Bittrex
   class Client
@@ -15,32 +15,31 @@ module Bittrex
 
     def get(path, params = {}, headers = {})
       nonce = Time.now.to_i
-      response = connection.get do |req|
-        url = "#{HOST}/#{path}"
-        req.params.merge!(params)
-        req.url(url)
-
-        if key
-          req.params[:apikey]   = key
-          req.params[:nonce]    = nonce
-          req.headers[:apisign] = signature(url, nonce)
-        end
+      params.merge!(nonce: nonce, apikey: key)
+      response = if path.include?('public')
+                   RestClient.get full_url(path, params)
+                 else
+                   RestClient.get full_url(path, params), apisign: signature(full_url(path, params))
+                 end
+      if path.include?('cancel')
+        JSON.parse(response.body)
+      else
+        JSON.parse(response.body)['result']
       end
-
-      JSON.parse(response.body)['result']
     end
 
     private
 
-    def signature(url, nonce)
-      OpenSSL::HMAC.hexdigest('sha512', secret, "#{url}?apikey=#{key}&nonce=#{nonce}")
+    def signature(url)
+      OpenSSL::HMAC.hexdigest('sha512', secret, url)
     end
 
-    def connection
-      @connection ||= Faraday.new(:url => HOST) do |faraday|
-        faraday.request  :url_encoded
-        faraday.adapter  Faraday.default_adapter
-      end
+    def full_url(path, params)
+      url = "#{HOST}/#{path}"
+      url.concat('?')
+      parsed_params = params.to_a.map { |a| a.join('=') }.join('&')
+      url.concat(parsed_params)
+      url
     end
   end
 end
