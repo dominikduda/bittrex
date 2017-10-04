@@ -9,7 +9,7 @@ module Bittrex
     end
 
     def self.cancel_order(uuid)
-      response = client.get('market/cancel')
+      response = client.get('market/cancel', uuid: uuid)
       attrs = response
       attrs['uuid'] = uuid
       new(attrs, response)
